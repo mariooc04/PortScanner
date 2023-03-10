@@ -1,14 +1,14 @@
 #!/bin/bash
 
-############################################################################################################
-# Author:   Mario Ortega
-#
-# Description: This script installs the dependencies for the project and launches the scanner. Only for Linux.
-#   It is compulsory to be run as root.
-#
-# Usage: ./launch.sh
-#
-############################################################################################################
+##################################################################################################################
+# Author:   Mario Ortega                                                                                         #
+#                                                                                                                #
+# Description: This script installs the dependencies for the project and launches the scanner. Only for Linux.   #
+#   It is compulsory to be run as root.                                                                          #
+#                                                                                                                #
+# Usage: ./launch.sh                                                                                             #
+#                                                                                                                #
+##################################################################################################################
 
 # Constants for colors
 RED='\033[0;31m'
