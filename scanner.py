@@ -38,7 +38,7 @@ def handler(signal_received, frame):
     print("Hope it was useful! :)")
     print("Killing all processes... (this may take a while)")
     # Kill all nmap processes
-    killed = os.system("killall nmap > /dev/null 2>&1")
+    os.system("killall nmap > /dev/null 2>&1")
     print("Exiting...")
     time.sleep(1)
     sys.exit(0)
@@ -50,14 +50,15 @@ def clearConsole():
 def mainMenu():
     print("\nMenu:")
     print("1. Scan a single IP address")
-    print("2. Scan a whole network")
+    print("2. Custom scan")
     print("3. Exit")
     option = input("Select an option: ")
 
     if option == "1":
-        SingleIPScan()
+        DefaultIPScan()
     elif option == "2":
-        print("Network scan")
+        print("Custom scan")
+        CustomScan()
     elif option == "3":
         clearConsole()
         print("Hope it was useful! :)")
@@ -66,14 +67,48 @@ def mainMenu():
         sys.exit()
 
 # Function to scan a whole network
-def NetworkScan():
+def CustomScan():
     clearConsole()
-    print("Network scan")
+    print("Custom scan")
+
+    nm = nmap.PortScanner()
+    ip = input("Enter the IP address: ")
+    flags = input("Enter the flags (-Pn -sS...): ")
+    ports = input("Do you want to scan all ports? (y/n): ")
+
+    if ports == "y":
+        print("Scanning all ports...")
+        nm.scan(ip, '1-65535', flags)
+        for host in nm.all_hosts():
+            print('Host : %s (%s)' % (host, nm[host].hostname()))
+            print('State : %s' % nm[host].state())
+            for proto in nm[host].all_protocols():
+                print('----------')
+                print('Protocol : %s' % proto)
+
+                lport = nm[host][proto].keys()
+                #lport.sort()
+                for port in lport:
+                    print ('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
+    elif ports == "n":
+        ports = input("Enter the ports to scan (Example: 25-25000): ")
+        nm.scan(ip, ports, flags)
+        for host in nm.all_hosts():
+            print('Host : %s (%s)' % (host, nm[host].hostname()))
+            print('State : %s' % nm[host].state())
+            for proto in nm[host].all_protocols():
+                print('----------')
+                print('Protocol : %s' % proto)
+
+                lport = nm[host][proto].keys()
+                #lport.sort()
+                for port in lport:
+                    print ('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
 
 # Function to scan a single IP address
-def SingleIPScan():
+def DefaultIPScan():
     clearConsole()
-    print("Single IP scan")
+    print("Default IP scan")
 
     nm = nmap.PortScanner()
 
@@ -81,6 +116,7 @@ def SingleIPScan():
     ports = input("Do you want to scan all ports? (y/n): ")
 
     if ports == "y":
+        print("Scanning all ports...")
         nm.scan(ip, '1-65535')
         for host in nm.all_hosts():
             print('Host : %s (%s)' % (host, nm[host].hostname()))
@@ -94,7 +130,19 @@ def SingleIPScan():
                 for port in lport:
                     print ('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
     elif ports == "n":
-        ports = input("Enter the ports to scan separated by commas: ")
+        ports = input("Enter the ports to scan (Example: 25-25000): ")
+        nm.scan(ip, ports)
+        for host in nm.all_hosts():
+            print('Host : %s (%s)' % (host, nm[host].hostname()))
+            print('State : %s' % nm[host].state())
+            for proto in nm[host].all_protocols():
+                print('----------')
+                print('Protocol : %s' % proto)
+
+                lport = nm[host][proto].keys()
+                #lport.sort()
+                for port in lport:
+                    print ('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
     
     mainMenu()
 

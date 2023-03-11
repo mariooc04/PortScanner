@@ -47,10 +47,29 @@ clean
 
 banner "Installing dependencies and necessary tools" "This may take a while..."
 # Python 3 and pip
-apt install python3 python3-pip -y >/dev/null 2>&1
+# Check if python3 is installed
+if ! command -v python3 &> /dev/null
+then
+    # If not, install it
+    banner "Python 3 is not installed and it is necessary for the scanner" "Installing Python 3..."
+    apt install python3 -y >/dev/null 2>&1
+fi
+# Check if pip3 is installed
+if ! command -v pip3 &> /dev/null
+then
+    # If not, install it
+    banner "pip3 is not installed and it is necessary for the scanner" "Installing pip3..."
+    apt install python3-pip -y >/dev/null 2>&1
+fi
 
 # Install nmap
-apt install nmap -y >/dev/null 2>&1
+# Check if nmap is installed
+if ! command -v nmap &> /dev/null
+then
+    # If not, install it
+    banner "nmap is not installed and it is necessary for the scanner" "Installing nmap..."
+    apt install nmap -y >/dev/null 2>&1
+fi
 
 # Install python dependencies for nmap
 pip3 install python-nmap >/dev/null 2>&1
