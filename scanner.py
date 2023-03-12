@@ -78,7 +78,14 @@ def CustomScan():
 
     if ports == "y":
         print("Scanning all ports...")
-        nm.scan(ip, '1-65535', flags)
+
+        # Uso de excepciones para evitar errores
+        try:
+            nm.scan(ip, '1-65535', flags)
+        except nmap.PortScannerError:
+            print('Some of the input parameters are not valid')
+            sys.exit(0)
+        
         for host in nm.all_hosts():
             print('Host : %s (%s)' % (host, nm[host].hostname()))
             print('State : %s' % nm[host].state())
@@ -92,7 +99,14 @@ def CustomScan():
                     print ('port : %s\tstate : %s' % (port, nm[host][proto][port]['state']))
     elif ports == "n":
         ports = input("Enter the ports to scan (Example: 25-25000): ")
-        nm.scan(ip, ports, flags)
+        
+        # Uso de excepciones para evitar errores
+        try:
+            nm.scan(ip, ports, flags)
+        except nmap.PortScannerError:
+            print('Some of the input parameters are not valid')
+            sys.exit(0)
+
         for host in nm.all_hosts():
             print('Host : %s (%s)' % (host, nm[host].hostname()))
             print('State : %s' % nm[host].state())
