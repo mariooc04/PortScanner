@@ -48,6 +48,7 @@ def clearConsole():
     os.system('clear')
 
 def mainMenu():
+    clearConsole()
     print("\nMenu:")
     print("1. Scan a single IP address")
     print("2. Custom scan")
@@ -83,8 +84,10 @@ def CustomScan():
         try:
             nm.scan(ip, '1-65535', flags)
         except nmap.PortScannerError:
-            print('Some of the input parameters are not valid')
-            sys.exit(0)
+            error = colored("Some of the input parameters are not valid, please try again.", 'red', attrs=['bold'])
+            print(error)
+            os.system("sleep 2")
+            mainMenu()
         
         for host in nm.all_hosts():
             print('Host : %s (%s)' % (host, nm[host].hostname()))
@@ -104,8 +107,10 @@ def CustomScan():
         try:
             nm.scan(ip, ports, flags)
         except nmap.PortScannerError:
-            print('Some of the input parameters are not valid')
-            sys.exit(0)
+            error = colored("Some of the input parameters are not valid, please try again.", 'red', attrs=['bold'])
+            print(error)
+            os.system("sleep 2")
+            mainMenu()
 
         for host in nm.all_hosts():
             print('Host : %s (%s)' % (host, nm[host].hostname()))
@@ -167,7 +172,7 @@ def main():
     signal.signal(signal.SIGINT, handler)
 
     CustomColouredBanner()
-
+    os.system("sleep 2")
     mainMenu()
 
 
